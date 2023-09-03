@@ -1,0 +1,127 @@
+import React, { useState, useEffect } from 'react';
+import { Table, Button } from 'antd';
+import { TextField, Box, Container } from '@mui/material';
+import { BiBlock, BiSearch, BiCheck } from 'react-icons/bi';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { axiosInstance } from '../utils/interceptors';
+
+const { Column } = Table;
+
+const SellerComponent = () => {
+  const [searchText, setSearchText] = useState('');
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchSellers();
+  }, []);
+
+  const fetchSellers = async () => {
+    try { 
+      const response = await axiosInstance.get('/getsellerdata'); // Update the endpoint
+      const sellersData = response.data.map((seller, index) => ({
+        key: seller._id,
+        id: seller._id,
+        joiningDate: seller.joinedDate,
+        name: seller.firstname,
+        email: seller.email,
+        approved: seller.approved,
+      }));
+      setData(sellersData);
+    } catch (error) {
+      console.error('Error fetching sellers:', error);
+    }
+  };
+
+  const handleSearch = (value) => {
+    setSearchText(value);
+  };
+
+  const filteredData = data.filter((record) =>
+    Object.values(record).some((value) =>
+      String(value).toLowerCase().includes(searchText.toLowerCase())
+    )
+  );
+
+  const handleApproveSeller = async (key) => {
+    try {
+      await axiosInstance.post(`/seller/${key}/approve`); // Update the endpoint
+      const updatedData = data.map((item) => {
+        if (item.key === key) {
+          return { ...item, approved: true };
+        }
+        return item;
+      });
+      setData(updatedData);
+      toast.success('Seller approved successfully!');
+    } catch (error) {
+      console.error('Error approving seller:', error);
+      toast.error('Error approving seller. Please try again.');
+    }
+  };
+
+  const handleBlockSeller = async (key) => {
+    try {
+      await axiosInstance.delete(`/seller/${key}`); // Update the endpoint
+      const updatedData = data.map((item) => {
+        if (item.key === key) {
+          return { ...item, approved: false };
+        }
+        return item;
+      });
+      setData(updatedData);
+      toast.success('Seller blocked successfully!');
+    } catch (error) {
+      console.error('Error blocking seller:', error);
+      toast.error('Error blocking seller. Please try again.');
+    }
+  };
+
+  return (
+    <Container maxWidth="md">
+      <Box mt={4} display="flex" justifyContent="space-between">
+        <TextField
+          label="Search Sellers"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          size="small"
+          value={searchText}
+          onChange={(e) => handleSearch(e.target.value)}
+          InputProps={{
+            startAdornment: <BiSearch size={18} />,
+          }}
+        />
+      </Box>
+
+      <Table dataSource={filteredData}>
+        <Column title="ID" dataIndex="id" key="id" />
+        <Column title="JOINING DATE" dataIndex="joiningDate" key="joiningDate" />
+        <Column title="NAME" dataIndex="name" key="name" />
+        <Column title="EMAIL" dataIndex="email" key="email" />
+        <Column
+          title="ACTIONS"
+          key="actions"
+          render={(_, record) => (
+            <Button.Group>
+              {record.approved ? (
+                <Button type="danger" onClick={() => handleBlockSeller(record.key)}>
+                  <BiBlock size={18} />
+                  Block seller
+                </Button>
+              ) : (
+                <Button type="primary" onClick={() => handleApproveSeller(record.key)}>
+                  <BiCheck size={18} />
+                  Approve seller
+                </Button>
+              )}
+            </Button.Group>
+          )}
+        />
+      </Table>
+      <ToastContainer />
+    </Container>
+  );
+};
+
+export default SellerComponent;
