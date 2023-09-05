@@ -4,6 +4,7 @@ petsHub is an innovative platform addressing the evolving world of pet ownership
 
 MODULES DESCRIPTION
 
+
 User User Profile: Logged-in users access a dashboard showing account info, orders, reviews, and requests. Profile Editing: Users update personal info, preferences, and pet details. Password Change: Users can change passwords. Notifications: Users get alerts for account updates, orders, and responses to breeding requests.
 
 
