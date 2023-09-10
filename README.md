@@ -19,10 +19,17 @@ Admin Admins log in with credentials to access a dashboard. They manage user and
 ![pethom](https://github.com/gailinsidharth/pethub/assets/79043644/1ad9757c-8451-432c-b8b2-1728086a9fe8)
 
 
+
+
 ![petproduct](https://github.com/gailinsidharth/pethub/assets/79043644/65e85778-3ff2-44a2-ba1a-e4f79f743290)
 
 
+
+
 ![hom](https://github.com/gailinsidharth/pethub/assets/79043644/4e29ffda-542b-42c1-80cf-30dd655991ec)
+
+
+
 
 ![login](https://github.com/gailinsidharth/pethub/assets/79043644/0350a432-e9b0-4b40-8e71-010e9cab8a91)
 
